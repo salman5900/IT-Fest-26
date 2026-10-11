@@ -708,6 +708,32 @@
       line-height: 1.6;
     }
 
+    /* ==========================================================================
+       SCROLL REVEAL "POP UP" ANIMATIONS
+       ========================================================================== */
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(35px) scale(0.96);
+      filter: blur(4px);
+      transition: 
+        opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+        filter 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform, filter;
+    }
+
+    .reveal-item.is-revealed {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0px);
+    }
+
+    /* Staggered delay helpers for wave pop-up */
+    .delay-100 { transition-delay: 0.1s; }
+    .delay-200 { transition-delay: 0.2s; }
+    .delay-300 { transition-delay: 0.3s; }
+    .delay-400 { transition-delay: 0.4s; }
+
     /* Event Cards Grid Boilerplate */
     .cards-grid {
       display: grid;
@@ -1056,7 +1082,7 @@
 
     <!-- 1. EVENTS BOILERPLATE -->
     <section id="events" style="scroll-margin-top: 5rem;">
-      <div class="section-header">
+      <div class="section-header reveal-item">
         <p class="section-eyebrow">Competitions &amp; Tracks</p>
         <h2 class="section-title">FEATURED ARENAS</h2>
         <p class="section-subtitle">Compete against the top coding and gaming teams across the state for a prize pool of ₹50,000+.</p>
@@ -1064,7 +1090,7 @@
 
       <div class="cards-grid">
         <!-- Card 1 -->
-        <div class="boilerplate-card">
+        <div class="boilerplate-card reveal-item delay-100">
           <div class="card-icon-box">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="16 18 22 12 16 6"></polyline>
@@ -1076,7 +1102,7 @@
         </div>
 
         <!-- Card 2 -->
-        <div class="boilerplate-card">
+        <div class="boilerplate-card reveal-item delay-200">
           <div class="card-icon-box">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
@@ -1087,7 +1113,7 @@
         </div>
 
         <!-- Card 3 -->
-        <div class="boilerplate-card">
+        <div class="boilerplate-card reveal-item delay-300">
           <div class="card-icon-box">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="2" y="6" width="20" height="12" rx="2"></rect>
@@ -1102,35 +1128,35 @@
 
     <!-- 2. SCHEDULE BOILERPLATE -->
     <section id="schedule" style="scroll-margin-top: 5rem;">
-      <div class="section-header">
+      <div class="section-header reveal-item">
         <p class="section-eyebrow">Event Timeline</p>
         <h2 class="section-title">FEST SCHEDULE</h2>
         <p class="section-subtitle">Two adrenaline-fueled days of technological warfare and cultural synergy.</p>
       </div>
 
       <div class="timeline-wrap">
-        <div class="timeline-row">
+        <div class="timeline-row reveal-item delay-100">
           <span class="timeline-time">09:00 AM</span>
           <div class="timeline-info">
             <h4>Inauguration &amp; Keynote</h4>
             <p>Welcome address by Department Head &amp; Chief Guests.</p>
           </div>
         </div>
-        <div class="timeline-row">
+        <div class="timeline-row reveal-item delay-200">
           <span class="timeline-time">11:00 AM</span>
           <div class="timeline-info">
             <h4>Hackathon Launch &amp; Code Battles</h4>
             <p>Problem statement release and 24-hour countdown initiation.</p>
           </div>
         </div>
-        <div class="timeline-row">
+        <div class="timeline-row reveal-item delay-300">
           <span class="timeline-time">08:00 PM</span>
           <div class="timeline-info">
             <h4>Late-Night LAN Gaming Battleground</h4>
             <p>High-voltage knockout tournaments in the gaming lounge.</p>
           </div>
         </div>
-        <div class="timeline-row">
+        <div class="timeline-row reveal-item delay-400">
           <span class="timeline-time">04:00 PM (Day 2)</span>
           <div class="timeline-info">
             <h4>Grand Finale &amp; Prize Distribution</h4>
@@ -1142,7 +1168,7 @@
 
     <!-- 3. CONTACT & REGISTRATION BOILERPLATE -->
     <section id="contact" style="scroll-margin-top: 5rem;">
-      <div class="contact-box" id="register">
+      <div class="contact-box reveal-item" id="register">
         <p class="section-eyebrow">Ready to Compete?</p>
         <h2 class="section-title" style="margin-bottom: 1rem;">SECURE YOUR SLOT</h2>
         <p class="section-subtitle" style="margin-bottom: 2rem;">
@@ -1294,6 +1320,26 @@
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeMenu();
+    });
+
+    // ==========================================================================
+    // SCROLL REVEAL "POP UP" ANIMATION OBSERVER
+    // ==========================================================================
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '0px 0px -50px 0px',
+      threshold: 0.12
+    });
+
+    document.querySelectorAll('.reveal-item').forEach(el => {
+      revealObserver.observe(el);
     });
 
     // ==========================================================================
