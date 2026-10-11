@@ -59,7 +59,7 @@
     }
 
     /* ==========================================================================
-       SYNTHWAVE LIVING BACKGROUND
+       SYNTHWAVE LIVING BACKGROUND (120Hz GPU OPTIMIZED — NO HEAVY FILTER BLURS)
        ========================================================================== */
     .synth-canvas {
       position: fixed;
@@ -67,45 +67,24 @@
       z-index: 0;
       pointer-events: none;
       overflow: hidden;
-      background: var(--bg-dark-purple);
+      background-color: var(--bg-dark-purple);
+      background-image: 
+        radial-gradient(circle at 20% 25%, rgba(255, 0, 127, 0.28) 0%, transparent 48%),
+        radial-gradient(circle at 80% 25%, rgba(0, 240, 255, 0.25) 0%, transparent 45%),
+        radial-gradient(circle at 50% 80%, rgba(255, 0, 127, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(0, 240, 255, 0.18) 0%, transparent 42%);
     }
 
-    .glow-field {
+    .synth-ambient-glow {
       position: absolute;
-      inset: -15%;
-      background: 
-        radial-gradient(circle at 20% 25%, rgba(255, 0, 127, 0.32) 0%, transparent 45%),
-        radial-gradient(circle at 80% 25%, rgba(0, 240, 255, 0.28) 0%, transparent 45%),
-        radial-gradient(circle at 50% 80%, rgba(255, 0, 127, 0.22) 0%, transparent 50%),
-        radial-gradient(circle at 75% 75%, rgba(0, 240, 255, 0.2) 0%, transparent 45%);
-      filter: blur(85px);
-      animation: synthShift 16s ease-in-out infinite alternate;
+      inset: -10%;
+      background: radial-gradient(circle at 50% 40%, rgba(0, 240, 255, 0.12), rgba(255, 0, 127, 0.08), transparent 70%);
+      animation: ambientPulse 12s ease-in-out infinite alternate;
     }
 
-    .plasma-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(95px);
-      mix-blend-mode: screen;
-      opacity: 0.65;
-    }
-
-    .orb-pink {
-      width: 480px;
-      height: 480px;
-      top: 5%;
-      left: 8%;
-      background: radial-gradient(circle, var(--neon-pink) 0%, transparent 70%);
-      animation: floatA 15s ease-in-out infinite alternate;
-    }
-
-    .orb-cyan {
-      width: 500px;
-      height: 500px;
-      top: 35%;
-      right: 8%;
-      background: radial-gradient(circle, var(--ice-blue) 0%, transparent 70%);
-      animation: floatB 18s ease-in-out infinite alternate;
+    @keyframes ambientPulse {
+      0% { transform: scale(0.98); opacity: 0.7; }
+      100% { transform: scale(1.04); opacity: 1; }
     }
 
     .synth-grid {
@@ -119,30 +98,8 @@
       -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.95) 30%, transparent 85%);
     }
 
-    .synth-noise {
-      position: absolute;
-      inset: 0;
-      opacity: 0.035;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    }
-
-    @keyframes synthShift {
-      0% { transform: scale(1) translate(0, 0); }
-      100% { transform: scale(1.08) translate(-2%, 2%); }
-    }
-
-    @keyframes floatA {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(45px, 35px); }
-    }
-
-    @keyframes floatB {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(-40px, -45px); }
-    }
-
     /* ==========================================================================
-       THE FLYING TRACE LOGO (APPLE-STYLE SINGLE FLUID GLIDE + OPTICAL BLUR)
+       THE FLYING TRACE LOGO (GPU TRANSFORM ENGINE — ZERO DRIFT, ZERO OFFSET)
        ========================================================================== */
     .flying-trace-logo {
       position: fixed;
@@ -152,17 +109,15 @@
       align-items: center;
       justify-content: center;
       pointer-events: auto;
-      will-change: top, left, width, height, filter, transform;
-      /* One unified, fluid Apple-grade cubic-bezier transition */
+      transform-origin: top left;
+      will-change: transform, filter;
+      /* Silky 120Hz GPU transition */
       transition: 
-        top 0.68s cubic-bezier(0.16, 1, 0.3, 1),
-        left 0.68s cubic-bezier(0.16, 1, 0.3, 1),
-        width 0.68s cubic-bezier(0.16, 1, 0.3, 1),
-        height 0.68s cubic-bezier(0.16, 1, 0.3, 1),
-        filter 0.45s ease;
+        transform 0.62s cubic-bezier(0.16, 1, 0.3, 1),
+        filter 0.4s ease;
       filter: 
-        drop-shadow(0 0 14px rgba(0, 240, 255, 0.75))
-        drop-shadow(0 0 30px rgba(255, 0, 127, 0.55));
+        drop-shadow(0 0 12px rgba(0, 240, 255, 0.75))
+        drop-shadow(0 0 25px rgba(255, 0, 127, 0.5));
     }
 
     .flying-trace-logo img {
@@ -170,13 +125,11 @@
       height: 100%;
       object-fit: contain;
       display: block;
-      transition: transform 0.68s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Optical motion blur during the flight (Apple-style cinematic streak) */
+    /* Subtle optical motion flare during transition */
     .flying-trace-logo.is-moving {
       filter: 
-        blur(2.6px)
         drop-shadow(0 0 24px rgba(0, 240, 255, 0.95))
         drop-shadow(0 0 45px rgba(255, 0, 127, 0.75));
     }
@@ -184,9 +137,8 @@
     /* Crisp landing once docked in navbar */
     .flying-trace-logo.is-docked {
       filter: 
-        blur(0px)
         drop-shadow(0 0 8px rgba(0, 240, 255, 0.75))
-        drop-shadow(0 0 16px rgba(255, 0, 127, 0.45));
+        drop-shadow(0 0 15px rgba(255, 0, 127, 0.45));
     }
 
     /* Desktop Hover on Trace */
@@ -561,13 +513,69 @@
 
     .hero-logo-ambient-glow {
       position: absolute;
-      width: 200px;
-      height: 150px;
+      width: 220px;
+      height: 160px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(0, 240, 255, 0.25) 0%, rgba(255, 0, 127, 0.2) 50%, transparent 75%);
-      filter: blur(30px);
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.3) 0%, rgba(255, 0, 127, 0.2) 50%, transparent 75%);
       pointer-events: none;
-      animation: breatheGlow 4s ease-in-out infinite alternate;
+      animation: breatheGlow 3.5s ease-in-out infinite alternate;
+    }
+
+    /* Hero Flare: Pulsing Neon Reactor Rings & Holographic Scanner */
+    .hero-reactor-pulse {
+      position: absolute;
+      inset: -14px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(0, 240, 255, 0.32);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.22), inset 0 0 12px rgba(255, 0, 127, 0.16);
+      animation: reactorPulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      pointer-events: none;
+    }
+
+    .hero-reactor-wave {
+      position: absolute;
+      inset: -28px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 0, 127, 0.35);
+      animation: reactorRotate 9s linear infinite;
+      pointer-events: none;
+    }
+
+    .hero-scanner-line {
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--ice-blue), var(--neon-pink), transparent);
+      box-shadow: 0 0 10px var(--ice-blue);
+      animation: scanSweep 3.2s ease-in-out infinite alternate;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    @keyframes reactorPulse {
+      0%, 100% {
+        transform: scale(0.96);
+        opacity: 0.45;
+        border-color: rgba(0, 240, 255, 0.3);
+      }
+      50% {
+        transform: scale(1.08);
+        opacity: 0.95;
+        border-color: rgba(255, 0, 127, 0.55);
+        box-shadow: 0 0 35px rgba(0, 240, 255, 0.35), 0 0 55px rgba(255, 0, 127, 0.25);
+      }
+    }
+
+    @keyframes reactorRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes scanSweep {
+      0% { top: 12%; opacity: 0.2; }
+      50% { opacity: 0.85; }
+      100% { top: 88%; opacity: 0.2; }
     }
 
     @keyframes breatheGlow {
@@ -590,7 +598,16 @@
       background: linear-gradient(135deg, var(--ice-blue) 15%, #e879f9 55%, var(--neon-pink) 95%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 25px rgba(255, 0, 127, 0.45));
+      animation: titleNeonPulse 3.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes titleNeonPulse {
+      0% {
+        filter: drop-shadow(0 0 20px rgba(255, 0, 127, 0.4));
+      }
+      100% {
+        filter: drop-shadow(0 0 32px rgba(0, 240, 255, 0.6)) drop-shadow(0 0 45px rgba(255, 0, 127, 0.45));
+      }
     }
 
     .hero-tagline {
@@ -709,30 +726,27 @@
     }
 
     /* ==========================================================================
-       SCROLL REVEAL "POP UP" ANIMATIONS
+       SCROLL REVEAL "POP UP" ANIMATIONS (120Hz GPU ACCELERATED — NO BLUR FILTER)
        ========================================================================== */
     .reveal-item {
       opacity: 0;
-      transform: translateY(35px) scale(0.96);
-      filter: blur(4px);
+      transform: translateY(26px);
       transition: 
-        opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-        transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-        filter 0.75s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: opacity, transform, filter;
+        opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
     }
 
     .reveal-item.is-revealed {
       opacity: 1;
-      transform: translateY(0) scale(1);
-      filter: blur(0px);
+      transform: translateY(0);
     }
 
     /* Staggered delay helpers for wave pop-up */
-    .delay-100 { transition-delay: 0.1s; }
-    .delay-200 { transition-delay: 0.2s; }
-    .delay-300 { transition-delay: 0.3s; }
-    .delay-400 { transition-delay: 0.4s; }
+    .delay-100 { transition-delay: 0.08s; }
+    .delay-200 { transition-delay: 0.16s; }
+    .delay-300 { transition-delay: 0.24s; }
+    .delay-400 { transition-delay: 0.32s; }
 
     /* Event Cards Grid Boilerplate */
     .cards-grid {
@@ -1039,9 +1053,12 @@
       <span class="college-name-text">Sir Syed Institute for Technical Studies</span>
     </div>
 
-    <!-- Natural Origin Anchor for the Flying Trace (NO BOX, NO HOUSING) -->
+    <!-- Natural Origin Anchor for the Flying Trace (NO BOX, NO HOUSING + CYBER FLARE) -->
     <div class="hero-logo-anchor" id="heroLogoAnchor">
       <div class="hero-logo-ambient-glow"></div>
+      <div class="hero-reactor-pulse"></div>
+      <div class="hero-reactor-wave"></div>
+      <div class="hero-scanner-line"></div>
     </div>
 
     <h1 class="hero-title">
@@ -1200,71 +1217,77 @@
     const navSlot = document.getElementById('navLogoSlot');
 
     let isDocked = false;
-    let motionTimeout = null;
+    let heroBaseCoords = { top: 0, left: 0, width: 145, height: 125 };
 
-    // Measure and apply position in ONE smooth, unbroken glide
-    function setLogoState(dock, animate = true) {
-      if (!flyingLogo || !heroAnchor || !navSlot) return;
-
-      const navRect = navSlot.getBoundingClientRect();
-      const heroRect = heroAnchor.getBoundingClientRect();
+    // Calculate static resting coordinates of the hero anchor
+    function updateHeroBase() {
+      if (!heroAnchor || !flyingLogo) return;
       const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+      const heroRect = heroAnchor.getBoundingClientRect();
+      
+      heroBaseCoords = {
+        top: heroRect.top + scrollY,
+        left: heroRect.left + (window.pageXOffset || 0),
+        width: heroAnchor.offsetWidth || 145,
+        height: heroAnchor.offsetHeight || 125
+      };
+
+      flyingLogo.style.top = `${heroBaseCoords.top}px`;
+      flyingLogo.style.left = `${heroBaseCoords.left}px`;
+      flyingLogo.style.width = `${heroBaseCoords.width}px`;
+      flyingLogo.style.height = `${heroBaseCoords.height}px`;
+
+      // Re-apply current state cleanly
+      applyLogoTransform(isDocked, false);
+    }
+
+    // GPU-accelerated translate3d docking (Zero layout reflow, Zero drift)
+    function applyLogoTransform(dock, animate = true) {
+      if (!flyingLogo || !navSlot) return;
 
       if (!animate) {
         flyingLogo.style.transition = 'none';
       } else {
         flyingLogo.style.transition = `
-          top 0.68s cubic-bezier(0.16, 1, 0.3, 1),
-          left 0.68s cubic-bezier(0.16, 1, 0.3, 1),
-          width 0.68s cubic-bezier(0.16, 1, 0.3, 1),
-          height 0.68s cubic-bezier(0.16, 1, 0.3, 1),
-          filter 0.45s ease
+          transform 0.62s cubic-bezier(0.16, 1, 0.3, 1),
+          filter 0.4s ease
         `;
-        // Apply optical motion blur during flight
         flyingLogo.classList.add('is-moving');
-        clearTimeout(motionTimeout);
-        motionTimeout = setTimeout(() => {
-          flyingLogo.classList.remove('is-moving');
-        }, 520);
+        setTimeout(() => flyingLogo.classList.remove('is-moving'), 480);
       }
 
       if (dock) {
-        // Destination: Navbar slot
-        flyingLogo.style.top = `${navRect.top}px`;
-        flyingLogo.style.left = `${navRect.left}px`;
-        flyingLogo.style.width = `${navSlot.offsetWidth || 36}px`;
-        flyingLogo.style.height = `${navSlot.offsetHeight || 36}px`;
+        const navRect = navSlot.getBoundingClientRect();
+        const deltaX = navRect.left - heroBaseCoords.left;
+        const deltaY = navRect.top - heroBaseCoords.top;
+        const targetScale = (navSlot.offsetWidth || 36) / heroBaseCoords.width;
+
+        flyingLogo.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0) scale(${targetScale})`;
         flyingLogo.classList.add('is-docked');
       } else {
-        // Origin: Hero center anchor (adjusted for current scroll position)
-        const heroOriginTop = heroRect.top;
-        flyingLogo.style.top = `${heroOriginTop}px`;
-        flyingLogo.style.left = `${heroRect.left}px`;
-        flyingLogo.style.width = `${heroAnchor.offsetWidth || 145}px`;
-        flyingLogo.style.height = `${heroAnchor.offsetHeight || 125}px`;
+        // ALWAYS returns to (0, 0, 0) scale(1) — Mathematically impossible to drift or be offset!
+        flyingLogo.style.transform = `translate3d(0, 0, 0) scale(1)`;
         flyingLogo.classList.remove('is-docked');
       }
 
       isDocked = dock;
     }
 
-    // Single unified scroll listener (Apple-style threshold trigger)
-    let lastScrollY = 0;
+    // Scroll trigger (Passive listener — smooth 120Hz on flagship phones)
     function handleScrollTrigger() {
       const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-      const dockThreshold = 55; // Quick threshold to initiate ONE smooth flight
+      const dockThreshold = 55;
 
       if (scrollY > dockThreshold && !isDocked) {
-        setLogoState(true, true);
+        applyLogoTransform(true, true);
       } else if (scrollY <= dockThreshold && isDocked) {
-        setLogoState(false, true);
+        applyLogoTransform(false, true);
       }
-      lastScrollY = scrollY;
     }
 
     window.addEventListener('scroll', handleScrollTrigger, { passive: true });
 
-    // Click logo interaction: smooth scroll to top if docked, or explore if in hero
+    // Click logo: smooth return to top or explore
     flyingLogo.addEventListener('click', () => {
       if (isDocked) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1274,19 +1297,21 @@
       }
     });
 
-    // Window resize handler: update position without animation glitches
+    // Window resize & orientation change
     window.addEventListener('resize', () => {
-      setLogoState(isDocked, false);
+      updateHeroBase();
     });
 
-    // Initial setup on page load
     window.addEventListener('DOMContentLoaded', () => {
+      updateHeroBase();
       const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-      setLogoState(scrollY > 55, false);
+      applyLogoTransform(scrollY > 55, false);
     });
+
     window.addEventListener('load', () => {
+      updateHeroBase();
       const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-      setLogoState(scrollY > 55, false);
+      applyLogoTransform(scrollY > 55, false);
     });
 
     // ==========================================================================
@@ -1323,7 +1348,7 @@
     });
 
     // ==========================================================================
-    // SCROLL REVEAL "POP UP" ANIMATION OBSERVER
+    // SCROLL REVEAL "POP UP" ANIMATION OBSERVER (120Hz GPU Optimized)
     // ==========================================================================
     const revealObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
@@ -1334,8 +1359,8 @@
       });
     }, {
       root: null,
-      rootMargin: '0px 0px -50px 0px',
-      threshold: 0.12
+      rootMargin: '0px 0px -40px 0px',
+      threshold: 0.1
     });
 
     document.querySelectorAll('.reveal-item').forEach(el => {
@@ -1343,33 +1368,19 @@
     });
 
     // ==========================================================================
-    // BLOCK ZOOM (Prevents pinch-to-zoom & double-tap zoom for true App feel)
+    // GESTURE ZOOM INTERCEPTION (Passive, non-blocking for 120Hz S24 smoothness)
     // ==========================================================================
     // Block iOS Safari gesture scaling
     document.addEventListener('gesturestart', (e) => e.preventDefault());
     document.addEventListener('gesturechange', (e) => e.preventDefault());
     document.addEventListener('gestureend', (e) => e.preventDefault());
 
-    // Block multi-touch pinch zoom
-    document.addEventListener('touchstart', (e) => {
-      if (e.touches && e.touches.length > 1) {
-        e.preventDefault();
-      }
-    }, { passive: false });
-
-    document.addEventListener('touchmove', (e) => {
-      if (e.touches && e.touches.length > 1) {
-        e.preventDefault();
-      }
-    }, { passive: false });
-
-    // Block double-tap to zoom (fast successive taps)
+    // Block double-tap to zoom
     let lastTapTime = 0;
     document.addEventListener('touchend', (e) => {
       const currentTime = Date.now();
       const tapGap = currentTime - lastTapTime;
       if (tapGap < 320 && tapGap > 0) {
-        // Prevent zoom on double tap while allowing normal clicks on links/buttons
         if (!e.target.closest('a, button, input, [role="button"]')) {
           e.preventDefault();
         }
@@ -1377,7 +1388,7 @@
       lastTapTime = currentTime;
     }, { passive: false });
 
-    // Block trackpad pinch / Ctrl+wheel zoom on desktop
+    // Block desktop trackpad pinch / Ctrl+wheel zoom
     window.addEventListener('wheel', (e) => {
       if (e.ctrlKey) {
         e.preventDefault();
