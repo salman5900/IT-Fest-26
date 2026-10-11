@@ -844,6 +844,18 @@
       margin-bottom: 4rem;
     }
 
+    /* ==========================================================================
+       SCROLL MARGIN OFFSETS (Generous Clearance Below Floating Navbar)
+       ========================================================================== */
+    section[id],
+    #events,
+    #schedule,
+    #contact,
+    #register,
+    .contact-box {
+      scroll-margin-top: 8.5rem;
+    }
+
     .footer-bar {
       text-align: center;
       padding-top: 2rem;
@@ -912,6 +924,15 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
+      }
+
+      section[id],
+      #events,
+      #schedule,
+      #contact,
+      #register,
+      .contact-box {
+        scroll-margin-top: 7.2rem;
       }
     }
   </style>
@@ -1098,7 +1119,7 @@
   <div class="content-container">
 
     <!-- 1. EVENTS BOILERPLATE -->
-    <section id="events" style="scroll-margin-top: 5rem;">
+    <section id="events">
       <div class="section-header reveal-item">
         <p class="section-eyebrow">Competitions &amp; Tracks</p>
         <h2 class="section-title">FEATURED ARENAS</h2>
@@ -1144,7 +1165,7 @@
     </section>
 
     <!-- 2. SCHEDULE BOILERPLATE -->
-    <section id="schedule" style="scroll-margin-top: 5rem;">
+    <section id="schedule">
       <div class="section-header reveal-item">
         <p class="section-eyebrow">Event Timeline</p>
         <h2 class="section-title">FEST SCHEDULE</h2>
@@ -1184,7 +1205,7 @@
     </section>
 
     <!-- 3. CONTACT & REGISTRATION BOILERPLATE -->
-    <section id="contact" style="scroll-margin-top: 5rem;">
+    <section id="contact">
       <div class="contact-box reveal-item" id="register">
         <p class="section-eyebrow">Ready to Compete?</p>
         <h2 class="section-title" style="margin-bottom: 1rem;">SECURE YOUR SLOT</h2>
@@ -1287,14 +1308,45 @@
 
     window.addEventListener('scroll', handleScrollTrigger, { passive: true });
 
+    // Helper to calculate precise scroll position with navbar clearance
+    function getScrollOffset() {
+      return window.innerWidth <= 820 ? 115 : 136;
+    }
+
     // Click logo: smooth return to top or explore
     flyingLogo.addEventListener('click', () => {
       if (isDocked) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         const eventsSec = document.getElementById('events');
-        if (eventsSec) eventsSec.scrollIntoView({ behavior: 'smooth' });
+        if (eventsSec) {
+          const targetY = Math.max(0, eventsSec.getBoundingClientRect().top + window.pageYOffset - getScrollOffset());
+          window.scrollTo({ top: targetY, behavior: 'smooth' });
+        }
       }
+    });
+
+    // Smooth Anchor Scroll Navigation with Exact Navbar Clearance
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (!href || href === '#') return;
+
+        if (href === '#hero') {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          if (history.pushState) history.pushState(null, null, '#hero');
+          return;
+        }
+
+        const targetEl = document.querySelector(href);
+        if (targetEl) {
+          e.preventDefault();
+          const targetY = Math.max(0, targetEl.getBoundingClientRect().top + window.pageYOffset - getScrollOffset());
+          window.scrollTo({ top: targetY, behavior: 'smooth' });
+          if (history.pushState) history.pushState(null, null, href);
+        }
+      });
     });
 
     // Window resize & orientation change
