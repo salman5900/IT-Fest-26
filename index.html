@@ -173,14 +173,39 @@
       justify-content: space-between;
       padding: 0.6rem 1rem 0.6rem 1.25rem;
       border-radius: 9999px;
-      background: rgba(11, 0, 26, 0.78);
-      backdrop-filter: blur(26px);
-      -webkit-backdrop-filter: blur(26px);
-      border: 1px solid rgba(0, 240, 255, 0.22);
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(15, 4, 34, 0.52) 40%,
+        rgba(11, 0, 26, 0.64) 100%
+      );
+      backdrop-filter: blur(24px) saturate(190%) contrast(105%);
+      -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(105%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-top: 1px solid rgba(255, 255, 255, 0.32);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.22);
       box-shadow: 
-        0 15px 35px -10px rgba(0, 0, 0, 0.85),
-        0 0 25px -5px rgba(255, 0, 127, 0.22);
-      transition: all 0.3s ease;
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 2px 0 rgba(0, 240, 255, 0.14),
+        0 18px 40px -10px rgba(0, 0, 0, 0.8),
+        0 0 25px -4px rgba(0, 240, 255, 0.16);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    /* Glass Prism Sheen across top hemisphere */
+    .nav-pill::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.12) 0%,
+        rgba(255, 255, 255, 0.02) 40%,
+        transparent 65%
+      );
+      pointer-events: none;
     }
 
     /* Left: Logo Area & Navbar Landing Target */
@@ -281,10 +306,13 @@
     /* Desktop Hovers */
     @media (hover: hover) and (pointer: fine) {
       .nav-pill:hover {
-        border-color: rgba(0, 240, 255, 0.45);
+        border-color: rgba(0, 240, 255, 0.38);
+        border-top-color: rgba(255, 255, 255, 0.52);
         box-shadow: 
-          0 20px 45px -10px rgba(0, 0, 0, 0.9),
-          0 0 30px rgba(255, 0, 127, 0.35);
+          inset 0 1px 2px 0 rgba(255, 255, 255, 0.45),
+          inset 0 -1px 2px 0 rgba(255, 0, 127, 0.22),
+          0 22px 48px -10px rgba(0, 0, 0, 0.9),
+          0 0 32px 0 rgba(0, 240, 255, 0.25);
       }
       .nav-item:hover {
         color: #ffffff;
@@ -321,20 +349,25 @@
       }
     }
 
-    /* Mobile Hamburger */
+    /* Mobile Hamburger (Frosted Glass Capsule) */
     .hamburger-btn {
       display: none;
-      width: 38px;
-      height: 38px;
-      background: transparent;
-      border: 1px solid rgba(0, 240, 255, 0.25);
-      border-radius: 10px;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(15, 4, 34, 0.45) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-top: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: 12px;
       cursor: pointer;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       gap: 5px;
       padding: 0;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 4px 16px rgba(0, 0, 0, 0.5);
+      transition: all 0.25s ease;
     }
 
     .bar {
@@ -375,11 +408,17 @@
       bottom: 0;
       width: 290px;
       max-width: 85vw;
-      background: rgba(11, 0, 26, 0.96);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
-      border-right: 1px solid rgba(0, 240, 255, 0.3);
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.06) 0%,
+        rgba(15, 4, 34, 0.82) 40%,
+        rgba(11, 0, 26, 0.92) 100%
+      );
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border-right: 1px solid rgba(255, 255, 255, 0.16);
       box-shadow: 
+        inset 1px 0 1px rgba(255, 255, 255, 0.18),
         20px 0 60px rgba(0, 0, 0, 0.9),
         5px 0 35px rgba(255, 0, 127, 0.28);
       transform: translateX(-100%);
